@@ -19,7 +19,8 @@ function parseAction(text) {
 // plan -> act -> observe -> reflect, with a hard step cap and a transcript.
 async function runAgent(task, llm, opts) {
   opts = opts || {};
-  const maxSteps = opts.maxSteps || 10;
+  const requested = opts.maxSteps;
+  const maxSteps = Number.isInteger(requested) && requested > 0 ? requested : 10;
   const transcript = [];
   let prompt = [
     'You are an autonomous agent completing a task.',
