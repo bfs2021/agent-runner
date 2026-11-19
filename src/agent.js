@@ -1,11 +1,14 @@
 const { tools } = require('./tools');
 
 function parseAction(text) {
-  const idx = text.indexOf(' ');
-  if (idx < 0) return null;
-  const name = text.slice(0, idx).trim();
-  const rest = text.slice(idx + 1).trim();
+  const line = String(text || '').trim();
+  if (!line) return null;
+  // A bare tool name (no space, no args) is a valid call: default args to {}.
+  const idx = line.search(/\s/);
+  const name = idx < 0 ? line : line.slice(0, idx).trim();
+  const rest = idx < 0 ? '' : line.slice(idx + 1).trim();
   if (!tools[name]) return null;
+  if (!rest) return { name, args: {} };
   try { return { name, args: JSON.parse(rest) }; }
   catch (e) { return null; }
 }
