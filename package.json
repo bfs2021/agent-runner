@@ -1,5 +1,5 @@
 {
-  "name": "agent-runner",
+  "name": "@marcus.beauregard/agent-runner",
   "version": "1.0.0",
   "description": "A minimal autonomous agent runtime with a tool registry and reflection loop",
   "main": "src/index.js",
