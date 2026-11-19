@@ -1,13 +1,60 @@
 # agent-runner
 
-A minimal autonomous agent runtime. A pluggable LLM drives a
-plan → act → observe → reflect loop against a small, safe-by-default tool
-registry (read_file, write_file, and an allowlisted command runner: argv only,
-no shell, flags declared per command, paths confined to the working directory).
+A minimal autonomous agent runtime, and the worker built on it: **hand it an issue, get back a reviewable pull request.**
 
-This is the furthest point of the arc: taking everything learned across the
-other repos — small surfaces, explicit state, verification — and using it to
-orchestrate an agent that writes and runs its own code inside a sandbox.
+The runtime is a pluggable LLM driving a plan → act → observe → reflect loop against a small, safe-by-default tool registry (`read_file`, `write_file`, and an allowlisted command runner: argv only, no shell, flags declared per command, paths confined to the working directory).
 
-Swap the mock LLM for a real client to go live. Defaults matter: step caps,
-a command allowlist, and a full transcript on every run.
+This is the furthest point of the arc: taking everything learned across the other repos — small surfaces, explicit state, verification — and using it to orchestrate an agent that writes and runs its own code inside a sandbox.
+
+Swap the mock LLM for a real client to go live. Defaults matter: step caps, a command allowlist, and a full transcript on every run.
+
+## Two layers
+
+| Layer | What it is | Where |
+|---|---|---|
+| **Runtime** | the loop, the tools, the transcript | `src/agent.js`, `src/tools.js` |
+| **Worker** | a job on top of it: issue → patch → gate → review → PR | specified in [PRD.md](PRD.md) |
+
+The runtime works today. The worker is a specification with the hard dependency already met.
+
+## Run it
+
+```bash
+npm install          # no dependencies; this only writes the lockfile if you add one
+npm test             # node --test, 8 cases
+node src/index.js "List the files in this project"
+```
+
+The default entry point runs offline against a deterministic mock planner, so every run is reproducible and reviewable without a key.
+
+## The worker, in one command
+
+```bash
+agent-runner work https://github.com/owner/repo/issues/42 \
+  --repo ~/src/repo \
+  --gate "go test ./... && go vet ./... && gofmt -l ." \
+  --review copilot
+```
+
+Eight stages, each with a completion criterion: fetch the issue and prove it is still open, scope the change, reproduce the failure, implement the smallest fix, run the repo's own gate, pass a fresh-context review, commit once, open the PR with the claim and the proof attached.
+
+It refuses rather than guesses. Exit `3` means it stopped on purpose — issue already fixed, another person claimed it, a CLA it cannot sign, or a gate it cannot run here. A refusal is a successful run.
+
+Full requirements, contracts, refusals and milestones: [PRD.md](PRD.md).
+
+## Safety model
+
+- **argv, not shell.** `run_command` execs an array; no metacharacters, no interpreter flags, `node`/`python3` off the allowlist.
+- **Paths stay inside the working directory**, symlinks included.
+- **Step cap** on every run, and a transcript of every action.
+- **No merge authority.** The worker ends at a pull request.
+
+## Status
+
+| | |
+|---|---|
+| Runtime loop | working (mock planner) |
+| Tool registry + hardened command runner | working, tested |
+| Worker: fetch / scope / reproduce / gate / review / commit / PR | specified, not built |
+
+Next milestone: `work --dry-run` against a real issue — it prints the plan and the gate it would run, and writes nothing.
