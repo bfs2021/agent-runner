@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+// Copyright (C) 2026 Marcus Beauregard
+
 const { runAgent } = require('./agent');
 
 // A deterministic mock LLM so the loop runs offline. Swap for a real client.

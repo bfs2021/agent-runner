@@ -1,5 +1,7 @@
 # agent-runner
 
+[![CI](https://github.com/marcus-beauregard/agent-runner/actions/workflows/ci.yml/badge.svg)](https://github.com/marcus-beauregard/agent-runner/actions/workflows/ci.yml) [![License: GPL-2.0-or-later](https://img.shields.io/badge/license-GPL--2.0--or--later-blue.svg)](LICENSE)
+
 A minimal autonomous agent runtime, and the worker built on it: **hand it an issue, get back a reviewable pull request.**
 
 The runtime is a pluggable LLM driving a plan → act → observe → reflect loop against a small, safe-by-default tool registry (`read_file`, `write_file`, and an allowlisted command runner: argv only, no shell, flags declared per command, paths confined to the working directory).
@@ -58,3 +60,13 @@ Full requirements, contracts, refusals and milestones: [PRD.md](PRD.md).
 | Worker: fetch / scope / reproduce / gate / review / commit / PR | specified, not built |
 
 Next milestone: `work --dry-run` against a real issue — it prints the plan and the gate it would run, and writes nothing.
+
+## Contributing
+
+Humans and automated agents are both welcome. There is no CLA — every commit carries a [DCO](https://developercertificate.org/) sign-off (**git commit -s**). Start with a [good first issue](https://github.com/marcus-beauregard/agent-runner/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or read [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Licence
+
+GPL-2.0-or-later — see [LICENSE](LICENSE). Copyright (C) 2026 Marcus Beauregard.
+
+Releases published before 2026-11-19 (npm, PyPI, crates.io) remain available under MIT; this licence applies to the current tree and every release from here.

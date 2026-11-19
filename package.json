@@ -3,5 +3,9 @@
   "version": "1.0.0",
   "description": "A minimal autonomous agent runtime with a tool registry and reflection loop",
   "main": "src/index.js",
-  "scripts": { "start": "node src/index.js", "test": "node --test" }
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test"
+  },
+  "license": "GPL-2.0-or-later"
 }
