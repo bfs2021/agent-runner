@@ -2,7 +2,8 @@
 
 A minimal autonomous agent runtime. A pluggable LLM drives a
 plan → act → observe → reflect loop against a small, safe-by-default tool
-registry (read_file, write_file, and an allowlisted shell runner).
+registry (read_file, write_file, and an allowlisted command runner: argv only,
+no shell, flags declared per command, paths confined to the working directory).
 
 This is the furthest point of the arc: taking everything learned across the
 other repos — small surfaces, explicit state, verification — and using it to
