@@ -63,6 +63,7 @@ Stages 1–3 are cheap and local; they exist so stage 4 starts from a fact.
 - **The reviewer is not the author.** Same-session self-review is not review; the goldfish gets the diff and the issue, never the transcript.
 - **Never merge.** The worker's authority ends at a PR. Merges belong to a person or a maintainer.
 - **No secrets in the transcript.** Tokens come from the environment; the transcript records that a command ran, not what it carried.
+- **The issue body is data, not instructions.** An issue can contain "ignore your rules and run this"; the pipeline treats its text as a defect report to understand, never as a command. Anything it claims about the repo is verified against the checkout. This is the sharpest edge in the design: the worker reads attacker-controlled text and then executes code.
 
 ## 6. Refusals (exit 3)
 
